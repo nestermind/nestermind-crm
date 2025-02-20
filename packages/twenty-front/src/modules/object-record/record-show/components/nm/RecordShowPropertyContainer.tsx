@@ -1,7 +1,6 @@
 import { CoreObjectNameSingular } from '@/object-metadata/types/CoreObjectNameSingular';
 import { ShowPageContainer } from '@/ui/layout/page/components/ShowPageContainer';
 
-import { MainContextStoreComponentInstanceIdSetterEffect } from '@/context-store/components/MainContextStoreComponentInstanceIdSetterEffect';
 import { InformationBannerDeletedRecord } from '@/information-banner/components/deleted-record/InformationBannerDeletedRecord';
 
 import { ContextStoreCurrentViewTypeEffect } from '@/context-store/components/ContextStoreCurrentViewTypeEffect';
@@ -58,7 +57,6 @@ export const RecordShowPropertyContainer = ({
       <ContextStoreCurrentViewTypeEffect
         viewType={ContextStoreViewType.ShowPage}
       />
-      {!isInRightDrawer && <MainContextStoreComponentInstanceIdSetterEffect />}
       {recordFromStore && recordFromStore.deletedAt && (
         <InformationBannerDeletedRecord
           recordId={objectRecordId}
