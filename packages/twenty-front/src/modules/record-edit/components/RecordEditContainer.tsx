@@ -14,6 +14,7 @@ import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { ShowPageImageBanner } from '@/ui/layout/show-page/components/nm/ShowPageImageBanner';
 import { SingleTabProps, TabList } from '@/ui/layout/tab/components/TabList';
 import { useTabList } from '@/ui/layout/tab/hooks/useTabList';
+import { useLingui } from '@lingui/react/macro';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { isDefined } from 'twenty-shared';
@@ -143,6 +144,7 @@ export const RecordEditContainer = ({
 }: RecordEditContainerProps) => {
   const navigate = useNavigate();
   const { enqueueSnackBar } = useSnackBar();
+  const { t } = useLingui();
   const { objectMetadataItem } = useObjectMetadataItem({
     objectNameSingular,
   });
@@ -176,6 +178,7 @@ export const RecordEditContainer = ({
     return acc;
   }, {});
 
+  // TODO show UI for uploading images
   const images = record?.attachments?.filter((attachment: Attachment) =>
     attachment?.name?.includes('propertyimage'),
   );
@@ -186,6 +189,7 @@ export const RecordEditContainer = ({
       // If no fields are dirty, don't save
       if (isDirty) {
         const updatedFields = getUpdatedFields();
+        console.log(updatedFields);
 
         await updateOneRecord({
           idToUpdate: recordId,
@@ -329,7 +333,7 @@ export const RecordEditContainer = ({
         />
         <StyledButtonContainer>
           <Button
-            title={`Save`}
+            title={t`Save`}
             variant="primary"
             accent="blue"
             size="small"

@@ -13,6 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/modules/object-record/record-show/components/nm/ObjectOverview.tsx:574
+#~ msgid "object-overview.prefill-property.description"
+#~ msgstr "object-overview.prefill-property.description"
+
 #: src/modules/record-edit/components/RecordEditContainer.tsx:207
 #~ msgid "{0}"
 #~ msgstr "{0}"
@@ -29,6 +34,14 @@ msgstr "{apiKeyName} API Key"
 #: src/modules/action-menu/actions/record-actions/workflow-run-record-actions/hooks/useWorkflowRunRecordActions.tsx:65
 msgid "{name}"
 msgstr "{name}"
+
+#: src/modules/object-record/record-show/components/nm/ObjectOverview.tsx:426
+msgid "{overviewLabel} Overview"
+msgstr "{overviewLabel} Overview"
+
+#: src/modules/object-record/record-show/components/nm/ObjectOverview.tsx:580
+msgid "<0>Nester</0> will analyze available data and suggest values for empty fields."
+msgstr "<0>Nester</0> will analyze available data and suggest values for empty fields."
 
 #: src/pages/onboarding/ChooseYourPlan.tsx:92
 msgid "1 000 workflow node executions"
@@ -96,6 +109,10 @@ msgstr "Add"
 msgid "Add Field"
 msgstr "Add Field"
 
+#: src/modules/object-record/record-show/components/nm/publication/CompletionProgress.tsx:75
+msgid "Add more details to improve your listing"
+msgstr "Add more details to improve your listing"
+
 #: src/pages/settings/data-model/SettingsObjects.tsx:144
 msgid "Add object"
 msgstr "Add object"
@@ -122,7 +139,7 @@ msgstr "Add to blocklist"
 msgid "Add to favorites"
 msgstr "Add to favorites"
 
-#: src/modules/object-record/record-table/empty-state/utils/getEmptyStateTitle.ts:16
+#: src/modules/object-record/record-table/empty-state/utils/getEmptyStateTitle.ts:20
 msgid "Add your first {objectLabel}"
 msgstr "Add your first {objectLabel}"
 
@@ -225,6 +242,11 @@ msgstr "Authentication"
 msgid "Authorize"
 msgstr "Authorize"
 
+#. placeholder {0}: images.length
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:482
+msgid "Available Assets ({0})"
+msgstr "Available Assets ({0})"
+
 #: src/modules/object-record/record-board/record-board-column/utils/getAggregateOperationShortLabel.ts:15
 #: src/modules/object-record/record-board/record-board-column/utils/getAggregateOperationLabel.ts:15
 msgid "Average"
@@ -270,6 +292,7 @@ msgstr "Calendars"
 #: src/modules/ui/layout/modal/components/ConfirmationModal.tsx:152
 #: src/modules/settings/components/SaveAndCancelButtons/CancelButton.tsx:16
 #: src/modules/object-record/record-show/components/nm/VideoGenerationModal.tsx:89
+#: src/modules/object-record/record-show/components/nm/ObjectOverview.tsx:551
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -434,6 +457,10 @@ msgstr "Create new record"
 msgid "Create Webhook"
 msgstr "Create Webhook"
 
+#: src/modules/object-record/record-table/empty-state/utils/getEmptyStateSubTitle.ts:17
+msgid "Create your first publication from a property"
+msgstr "Create your first publication from a property"
+
 #: src/pages/onboarding/ChooseYourPlan.tsx:90
 msgid "Custom objects"
 msgstr "Custom objects"
@@ -478,6 +505,10 @@ msgstr "Date"
 #: src/pages/settings/profile/appearance/components/SettingsExperience.tsx:42
 msgid "Date and time"
 msgstr "Date and time"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:182
+msgid "Days Published"
+msgstr "Days Published"
 
 #: src/pages/settings/data-model/SettingsObjectFieldEdit.tsx:259
 #: src/modules/workflow/components/RecordShowPageWorkflowHeader.tsx:116
@@ -829,9 +860,45 @@ msgstr "Functions"
 msgid "General"
 msgstr "General"
 
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:532
+msgid "Generate Analysis"
+msgstr "Generate Analysis"
+
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:512
+msgid "Generate Insights"
+msgstr "Generate Insights"
+
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:564
+msgid "Generate professional videos using AI by using your property images."
+msgstr "Generate professional videos using AI by using your property images."
+
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:569
+msgid "Generate Video"
+msgstr "Generate Video"
+
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:580
+msgid "Generated Videos"
+msgstr "Generated Videos"
+
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:557
+msgid "Generating videos..."
+msgstr "Generating videos..."
+
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:569
+msgid "Generating..."
+msgstr "Generating..."
+
 #: src/pages/settings/profile/appearance/components/LocalePicker.tsx:81
 msgid "German"
 msgstr "German"
+
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:509
+msgid "Get AI-powered insights about potential buyers and personalized engagement strategies"
+msgstr "Get AI-powered insights about potential buyers and personalized engagement strategies"
+
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:529
+msgid "Get AI-powered insights about the local market and property positioning"
+msgstr "Get AI-powered insights about the local market and property positioning"
 
 #: src/pages/onboarding/InviteTeam.tsx:184
 msgid "Get the most out of your workspace by inviting your team."
@@ -878,6 +945,10 @@ msgstr "Indexes"
 #: src/modules/settings/data-model/fields/forms/components/SettingsDataModelFieldIconLabelForm.tsx:106
 msgid "Input must be in camel case and cannot start with a number"
 msgstr "Input must be in camel case and cannot start with a number"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:177
+msgid "Inquiries"
+msgstr "Inquiries"
 
 #: src/pages/settings/data-model/constants/SettingsObjectTableMetadata.ts:28
 msgid "Instances"
@@ -954,9 +1025,19 @@ msgstr "Latest"
 msgid "Latest date"
 msgstr "Latest date"
 
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:504
+msgid "Lead Insights"
+msgstr "Lead Insights"
+
 #: src/pages/onboarding/InviteTeam.tsx:127
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:158
+#: src/modules/object-record/record-show/components/nm/ObjectOverview.tsx:420
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:472
+msgid "Loading..."
+msgstr "Loading..."
 
 #: src/pages/onboarding/ChooseYourPlan.tsx:206
 msgid "Log out"
@@ -965,6 +1046,10 @@ msgstr "Log out"
 #: src/modules/settings/components/SettingsNavigationDrawerItems.tsx:228
 msgid "Logout"
 msgstr "Logout"
+
+#: src/modules/object-record/record-show/components/nm/publication/CompletionProgress.tsx:76
+msgid "Looking good!"
+msgstr "Looking good!"
 
 #: src/pages/settings/SettingsWorkspaceMembers.tsx:167
 msgid "Manage Members"
@@ -986,6 +1071,14 @@ msgstr "Manage your subscription"
 #: src/modules/action-menu/components/__stories__/RecordIndexActionMenuBarEntry.stories.tsx:60
 msgid "Mark as done"
 msgstr "Mark as done"
+
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:524
+msgid "Market Analysis"
+msgstr "Market Analysis"
+
+#: src/modules/object-record/record-show/components/nm/AISuite.tsx:548
+msgid "Marketing Video"
+msgstr "Marketing Video"
 
 #: src/modules/object-record/record-board/record-board-column/utils/getAggregateOperationShortLabel.ts:13
 #: src/modules/object-record/record-board/record-board-column/utils/getAggregateOperationLabel.ts:13
@@ -1107,6 +1200,22 @@ msgstr "New Webhook"
 #: src/modules/settings/accounts/components/SettingsAccountsListEmptyStateCard.tsx:56
 msgid "No connected account"
 msgstr "No connected account"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:223
+msgid "No inquiries yet"
+msgstr "No inquiries yet"
+
+#: src/modules/object-record/record-table/empty-state/utils/getEmptyStateTitle.ts:17
+msgid "No publications yet"
+msgstr "No publications yet"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:212
+msgid "No recent visitors yet"
+msgstr "No recent visitors yet"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:247
+msgid "No similar properties found"
+msgstr "No similar properties found"
 
 #: src/modules/object-record/record-table/empty-state/utils/getEmptyStateTitle.ts:13
 msgid "No workflow runs yet"
@@ -1230,10 +1339,27 @@ msgstr "Portuguese — Portugal"
 #~ msgid "Portuguese (Portugal)"
 #~ msgstr "Portuguese (Portugal)"
 
+#: src/modules/object-record/record-show/components/nm/ObjectOverview.tsx:431
+#: src/modules/object-record/record-show/components/nm/ObjectOverview.tsx:557
+msgid "Prefill"
+msgstr "Prefill"
+
+#: src/modules/object-record/record-show/components/nm/ObjectOverview.tsx:546
+msgid "Prefill Property"
+msgstr "Prefill Property"
+
 #: src/modules/settings/data-model/objects/forms/components/SettingsDataModelObjectSettingsFormCard.tsx:52
 #: src/modules/settings/data-model/components/SettingsDataModelPreviewFormCard.tsx:30
 msgid "Preview"
 msgstr "Preview"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:231
+msgid "Price History"
+msgstr "Price History"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:235
+msgid "Price history chart coming soon"
+msgstr "Price history chart coming soon"
 
 #: src/modules/auth/sign-in-up/components/FooterNote.tsx:37
 msgid "Privacy Policy"
@@ -1248,6 +1374,10 @@ msgstr "Profile"
 #: src/pages/settings/profile/appearance/components/LocalePicker.tsx:115
 msgid "Pseudo-English"
 msgstr "Pseudo-English"
+
+#: src/modules/object-record/record-show/components/nm/publication/CompletionProgress.tsx:73
+msgid "Publication completion -"
+msgstr "Publication completion -"
 
 #: src/modules/ui/layout/show-page/components/nm/modal-pages/PlatformSelect.tsx:271
 msgid "Publication Draft created successfully"
@@ -1264,6 +1394,14 @@ msgstr "Read documentation"
 #: src/modules/settings/profile/components/ChangePassword.tsx:53
 msgid "Receive an email containing password update link"
 msgstr "Receive an email containing password update link"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:220
+msgid "Recent Inquiries"
+msgstr "Recent Inquiries"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:209
+msgid "Recent Visitors"
+msgstr "Recent Visitors"
 
 #: src/modules/command-menu/components/CommandMenu.tsx:69
 msgid "Record Selection"
@@ -1326,9 +1464,9 @@ msgstr "Roles"
 msgid "Run a workflow and return here to view its executions"
 msgstr "Run a workflow and return here to view its executions"
 
-#: src/modules/record-edit/components/RecordEditContainer.tsx:298
-#~ msgid "Save"
-#~ msgstr "Save"
+#: src/modules/record-edit/components/RecordEditContainer.tsx:336
+msgid "Save"
+msgstr "Save"
 
 #: src/modules/sign-in-background-mock/components/SignInAppNavigationDrawerMock.tsx:44
 #: src/modules/navigation/components/MainNavigationDrawerItems.tsx:51
@@ -1440,6 +1578,10 @@ msgstr "Sign in"
 msgid "Sign up"
 msgstr "Sign up"
 
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:243
+msgid "Similar Properties"
+msgstr "Similar Properties"
+
 #: src/modules/auth/sign-in-up/components/SignInUpWithSSO.tsx:38
 msgid "Single sign-on (SSO)"
 msgstr "Single sign-on (SSO)"
@@ -1460,6 +1602,10 @@ msgstr "Spanish"
 #: src/pages/settings/security/SettingsSecurity.tsx:47
 msgid "SSO"
 msgstr "SSO"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:187
+msgid "Status"
+msgstr "Status"
 
 #: src/pages/settings/workspace/SettingsSubdomain.tsx:36
 msgid "Subdomain"
@@ -1626,7 +1772,7 @@ msgstr "Use as draft"
 msgid "Use letter, number and dash only. Start and finish with a letter or a number"
 msgstr "Use letter, number and dash only. Start and finish with a letter or a number"
 
-#: src/modules/object-record/record-table/empty-state/utils/getEmptyStateSubTitle.ts:16
+#: src/modules/object-record/record-table/empty-state/utils/getEmptyStateSubTitle.ts:20
 msgid "Use our API or add your first {objectLabel} manually"
 msgstr "Use our API or add your first {objectLabel} manually"
 
@@ -1652,6 +1798,14 @@ msgstr "Values"
 #: src/pages/settings/SettingsBilling.tsx:150
 msgid "View billing details"
 msgstr "View billing details"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:197
+msgid "Visitor Activity"
+msgstr "Visitor Activity"
+
+#: src/modules/object-record/record-show/components/nm/PublicationDetails.tsx:201
+msgid "Visitor activity chart coming soon"
+msgstr "Visitor activity chart coming soon"
 
 #: src/modules/settings/data-model/objects/components/SettingsObjectCoverImage.tsx:35
 msgid "Visualize"

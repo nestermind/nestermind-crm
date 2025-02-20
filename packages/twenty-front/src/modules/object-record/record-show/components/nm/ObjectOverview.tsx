@@ -19,6 +19,7 @@ import { FieldMetadataItem } from '@/object-metadata/types/FieldMetadataItem';
 import { PlatformBadge } from '@/object-record/record-show/components/nm/publication/PlatformBadge';
 import { ModalHotkeyScope } from '@/ui/layout/modal/components/types/ModalHotkeyScope';
 import { PlatformId } from '@/ui/layout/show-page/components/nm/types/Platform';
+import { Trans, useLingui } from '@lingui/react/macro';
 import groupBy from 'lodash.groupby';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -326,7 +327,7 @@ export const ObjectOverview = ({
   }, [recordFromStore]);
 
   const mainDetails: FieldMetadataItem[] = [];
-
+  const { t } = useLingui();
   // make sure all are defined pls
   rowsToShow.forEach((row) => {
     const fieldMetadata = inlineFieldMetadataItems.find(
@@ -415,15 +416,19 @@ export const ObjectOverview = ({
       <StyledFormBorder>
         {recordLoading ? (
           // TODO: Add skeleton loader
-          <div>Loading...</div>
+          <div>
+            <Trans>Loading...</Trans>
+          </div>
         ) : (
           <>
             <StyledHeader>
-              <StyledTitle>{overviewLabel} Overview</StyledTitle>
+              <StyledTitle>
+                <Trans>{overviewLabel} Overview</Trans>
+              </StyledTitle>
               <StyledButtonContainer>
                 {!isPublication ? (
                   <Button
-                    title={`Prefill`}
+                    title={t`Prefill`}
                     Icon={IconSparkles}
                     accent="purple"
                     onClick={openModal}
@@ -537,17 +542,19 @@ export const ObjectOverview = ({
           <StyledModalHeader>
             <StyledModalTitleContainer>
               <IconSparkles size={16} />
-              <StyledModalTitle>Prefill Property</StyledModalTitle>
+              <StyledModalTitle>
+                <Trans>Prefill Property</Trans>
+              </StyledModalTitle>
             </StyledModalTitleContainer>
             <StyledModalHeaderButtons>
               <Button
-                title={`Cancel`}
+                title={t`Cancel`}
                 Icon={IconX}
                 onClick={handleModalClose}
               />
               {isProcessed && (
                 <Button
-                  title={`Prefill`}
+                  title={t`Prefill`}
                   Icon={IconSparkles}
                   accent="purple"
                   onClick={handlePrefill}
@@ -570,8 +577,10 @@ export const ObjectOverview = ({
               </StyledDocumentContainer>
             )}
             <StyledModalDescription>
-              <StyledNesterColored>Nester</StyledNesterColored> will analyze
-              available data and suggest values for empty fields.
+              <Trans>
+                <StyledNesterColored>Nester</StyledNesterColored> will analyze
+                available data and suggest values for empty fields.
+              </Trans>
             </StyledModalDescription>
 
             <StyledDropZoneContainer

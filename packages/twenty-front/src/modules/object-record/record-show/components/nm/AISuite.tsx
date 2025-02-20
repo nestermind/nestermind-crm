@@ -2,15 +2,10 @@ import { useAttachments } from '@/activities/files/hooks/useAttachments';
 import { ActivityTargetableObject } from '@/activities/types/ActivityTargetableEntity';
 import { useRecordShowContainerData } from '@/object-record/record-show/hooks/useRecordShowContainerData';
 import { Modal, ModalRefType } from '@/ui/layout/modal/components/Modal';
-import { ModalHotkeyScope } from '@/ui/layout/modal/components/types/ModalHotkeyScope';
 import styled from '@emotion/styled';
 // eslint-disable-next-line no-restricted-imports
-import {
-  IconBrandInstagram,
-  IconChevronLeft,
-  IconChevronRight,
-  IconX,
-} from '@tabler/icons-react';
+import { Trans, useLingui } from '@lingui/react/macro';
+
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Button,
@@ -25,6 +20,7 @@ const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(4)};
+import { Trans } from '@lingui/react/macro';
   margin: ${({ theme }) => theme.spacing(4)};
   height: calc(100vh - ${({ theme }) => theme.spacing(8)});
 `;
@@ -429,14 +425,15 @@ export const AISuite = ({ targetableObject }: AISuiteProps) => {
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [generationProgress, setGenerationProgress] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
+  // eslint-disable-next-line @nx/workspace-no-state-useref
   const videoModalRef = useRef<ModalRefType>(null);
-  const modalRef = useRef<ModalRefType>(null);
+
   const { recordFromStore: record } = useRecordShowContainerData({
     objectNameSingular: targetableObject.targetObjectNameSingular,
     objectRecordId: targetableObject.id,
   });
   const { attachments = [] } = useAttachments(targetableObject);
-
+  const { t } = useLingui();
   const images =
     attachments?.filter((attachment) => attachment.type === 'Image') ?? [];
 
@@ -471,40 +468,8 @@ export const AISuite = ({ targetableObject }: AISuiteProps) => {
     setHasGeneratedVideos(true);
   };
 
-  const closeModal = () => {
-    modalRef.current?.close();
-  };
-
-  const handlePrevSlide = () => {
-    setCurrentSlide((prev) => (prev > 0 ? prev - 1 : DEMO_VIDEOS.length - 1));
-  };
-
-  const handleNextSlide = () => {
-    setCurrentSlide((prev) => (prev < DEMO_VIDEOS.length - 1 ? prev + 1 : 0));
-  };
-
-  const formatDescription = (description: string) => {
-    const hashtags = [
-      '#luxuryrealestate',
-      '#swissproperties',
-      '#dreamhome',
-      '#propertyforsale',
-      '#luxuryliving',
-    ];
-
-    const emojis = '🏠✨';
-    const formattedDesc = description.split('\n')[0]; // Take first paragraph
-
-    return (
-      <>
-        {emojis} {formattedDesc}
-        <StyledHashtags>{hashtags.join(' ')}</StyledHashtags>
-      </>
-    );
-  };
-
   if (!record) {
-    return <StyledLoadingContainer>Loading...</StyledLoadingContainer>;
+    return <StyledLoadingContainer>{t`Loading...`}</StyledLoadingContainer>;
   }
 
   return (
@@ -514,7 +479,7 @@ export const AISuite = ({ targetableObject }: AISuiteProps) => {
           <StyledLeftContent>
             <StyledAvailableAssets>
               <StyledAssetsTitle>
-                Available Assets ({images.length})
+                <Trans>Available Assets ({images.length})</Trans>
               </StyledAssetsTitle>
               <StyledImagesGrid>
                 {images.map((image) => (
@@ -536,16 +501,15 @@ export const AISuite = ({ targetableObject }: AISuiteProps) => {
               <StyledAITool>
                 <StyledToolHeader>
                   <IconSparkles size={16} />
-                  <StyledToolTitle>Lead Insights</StyledToolTitle>
+                  <StyledToolTitle>{t`Lead Insights`}</StyledToolTitle>
                 </StyledToolHeader>
                 <StyledToolContent>
                   <IconSparkles size={32} />
                   <StyledToolDescription>
-                    Get AI-powered insights about potential buyers and
-                    personalized engagement strategies
+                    {t`Get AI-powered insights about potential buyers and personalized engagement strategies`}
                   </StyledToolDescription>
                   <Button
-                    title={`Generate Insights`}
+                    title={t`Generate Insights`}
                     Icon={IconSparkles}
                     variant="secondary"
                     size="medium"
@@ -557,16 +521,15 @@ export const AISuite = ({ targetableObject }: AISuiteProps) => {
               <StyledAITool>
                 <StyledToolHeader>
                   <IconSearch size={16} />
-                  <StyledToolTitle>Market Analysis</StyledToolTitle>
+                  <StyledToolTitle>{t`Market Analysis`}</StyledToolTitle>
                 </StyledToolHeader>
                 <StyledToolContent>
                   <IconSearch size={32} />
                   <StyledToolDescription>
-                    Get AI-powered insights about the local market and property
-                    positioning
+                    {t`Get AI-powered insights about the local market and property positioning`}
                   </StyledToolDescription>
                   <Button
-                    title={`Generate Analysis`}
+                    title={t`Generate Analysis`}
                     Icon={IconSparkles}
                     variant="secondary"
                     size="medium"
@@ -582,7 +545,7 @@ export const AISuite = ({ targetableObject }: AISuiteProps) => {
               <StyledVideoSectionHeader>
                 <IconVideo size={16} />
                 <StyledVideoSectionTitle>
-                  Marketing Video
+                  {t`Marketing Video`}
                 </StyledVideoSectionTitle>
               </StyledVideoSectionHeader>
               <StyledVideoContent>
@@ -591,20 +554,19 @@ export const AISuite = ({ targetableObject }: AISuiteProps) => {
                     <StyledProgressContainer>
                       <ProgressBar value={generationProgress} />
                       <StyledProgressText>
-                        Generating videos... {generationProgress}%
+                        {t`Generating videos...`} {generationProgress}%
                       </StyledProgressText>
                     </StyledProgressContainer>
                   ) : (
                     <>
                       <IconVideo size={32} />
                       <StyledToolDescription>
-                        Generate professional videos using AI by using your
-                        property images.
+                        {t`Generate professional videos using AI by using your property images.`}
                       </StyledToolDescription>
                     </>
                   )}
                   <Button
-                    title={isGenerating ? `Generating...` : `Generate Video`}
+                    title={isGenerating ? t`Generating...` : t`Generate Video`}
                     Icon={IconSparkles}
                     accent="blue"
                     size="medium"
@@ -615,7 +577,7 @@ export const AISuite = ({ targetableObject }: AISuiteProps) => {
                 {hasGeneratedVideos && (
                   <StyledGeneratedVideosSection>
                     <StyledGeneratedVideosTitle>
-                      Generated Videos
+                      {t`Generated Videos`}
                     </StyledGeneratedVideosTitle>
                     <StyledVideoGrid>
                       {DEMO_VIDEOS.map((video, index) => (
@@ -631,74 +593,6 @@ export const AISuite = ({ targetableObject }: AISuiteProps) => {
           </StyledRightContent>
         </StyledMainContent>
       </StyledContainer>
-
-      <Modal
-        ref={modalRef}
-        size="medium"
-        isClosable
-        closedOnMount
-        onClose={closeModal}
-        hotkeyScope={ModalHotkeyScope.Default}
-        padding="none"
-      >
-        <StyledModalHeader>
-          <StyledModalTitleContainer>
-            <IconBrandInstagram size={16} />
-            <StyledModalTitle>Instagram Preview</StyledModalTitle>
-          </StyledModalTitleContainer>
-          <StyledModalHeaderButtons>
-            <Button title={`Close`} Icon={IconX} onClick={closeModal} />
-          </StyledModalHeaderButtons>
-        </StyledModalHeader>
-        <StyledModalContent>
-          <StyledInstagramPost>
-            <StyledPostHeader>
-              <StyledProfileImage>
-                <IconBrandInstagram size={16} />
-              </StyledProfileImage>
-              <StyledProfileName>nestermind</StyledProfileName>
-            </StyledPostHeader>
-            <StyledCarouselContainer>
-              <StyledVideo
-                key={currentSlide}
-                controls={false}
-                autoPlay
-                loop
-                muted
-              >
-                <source src={DEMO_VIDEOS[currentSlide]} type="video/mp4" />
-              </StyledVideo>
-              <StyledCarouselNav>
-                <StyledCarouselButton onClick={handlePrevSlide}>
-                  <IconChevronLeft size={16} />
-                </StyledCarouselButton>
-                <StyledCarouselButton onClick={handleNextSlide}>
-                  <IconChevronRight size={16} />
-                </StyledCarouselButton>
-              </StyledCarouselNav>
-            </StyledCarouselContainer>
-            <StyledCarouselDots>
-              {DEMO_VIDEOS.map((video, index) => (
-                <StyledVideoThumbnail
-                  key={index}
-                  src={video}
-                  isActive={currentSlide === index}
-                  onClick={() => setCurrentSlide(index)}
-                  muted
-                />
-              ))}
-            </StyledCarouselDots>
-            <StyledPostDescription>
-              <StyledDescriptionHeader>nestermind</StyledDescriptionHeader>
-              <StyledPostText>
-                Discover this stunning 5.5-room home, perfect for those seeking
-                comfort, style, and functionality. {formatDescription('')}
-              </StyledPostText>
-              <StyledPostTime>2 HOURS AGO</StyledPostTime>
-            </StyledPostDescription>
-          </StyledInstagramPost>
-        </StyledModalContent>
-      </Modal>
 
       <VideoGenerationModal
         ref={videoModalRef}

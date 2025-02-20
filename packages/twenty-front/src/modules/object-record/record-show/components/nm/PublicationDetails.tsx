@@ -3,17 +3,18 @@ import { StatusBadge } from '@/object-record/record-show/components/nm/publicati
 import { useRecordShowContainerData } from '@/object-record/record-show/hooks/useRecordShowContainerData';
 import styled from '@emotion/styled';
 // eslint-disable-next-line no-restricted-imports
+import { Trans, useLingui } from '@lingui/react/macro';
 import {
-    IconCalendarStats,
-    IconChartBar,
-    IconMessageCircle2,
+  IconCalendarStats,
+  IconChartBar,
+  IconMessageCircle2,
 } from '@tabler/icons-react';
 import { useMemo } from 'react';
 import {
-    IconBuildingSkyscraper,
-    IconUsers,
-    LARGE_DESKTOP_VIEWPORT,
-    MOBILE_VIEWPORT,
+  IconBuildingSkyscraper,
+  IconUsers,
+  LARGE_DESKTOP_VIEWPORT,
+  MOBILE_VIEWPORT,
 } from 'twenty-ui';
 import { ObjectOverview } from './ObjectOverview';
 import { CompletionProgress } from './publication/CompletionProgress';
@@ -137,6 +138,7 @@ type PublicationDetailsProps = {
 export const PublicationDetails = ({
   targetableObject,
 }: PublicationDetailsProps) => {
+  const { t } = useLingui();
   const { recordFromStore: publication, recordLoading } =
     useRecordShowContainerData({
       objectNameSingular: targetableObject.targetObjectNameSingular,
@@ -151,7 +153,11 @@ export const PublicationDetails = ({
   }, [publication]);
 
   if (recordLoading || !publication) {
-    return <StyledLoadingContainer>Loading...</StyledLoadingContainer>;
+    return (
+      <StyledLoadingContainer>
+        <Trans>Loading...</Trans>
+      </StyledLoadingContainer>
+    );
   }
 
   return (
@@ -168,17 +174,17 @@ export const PublicationDetails = ({
         </StyledProgressContainer>
         <StyledKPIGrid>
           <KPICard
-            label="Inquiries"
+            label={t`Inquiries`}
             value={publication.metrics?.inquiries || 0}
             icon={<IconMessageCircle2 size={16} />}
           />
           <KPICard
-            label="Days Published"
+            label={t`Days Published`}
             value={publication.metrics?.daysPublished || 0}
             icon={<IconCalendarStats size={16} />}
           />
           <KPICard
-            label="Status"
+            label={t`Status`}
             value={<StatusBadge status={publication.stage} />}
             icon={<IconBuildingSkyscraper size={16} />}
           />
@@ -188,11 +194,11 @@ export const PublicationDetails = ({
           <StyledSection>
             <StyledSectionTitle>
               <IconChartBar size={16} />
-              Visitor Activity
+              {t`Visitor Activity`}
             </StyledSectionTitle>
             <StyledSectionContent>
               <StyledChartPlaceholder>
-                Visitor activity chart coming soon
+                {t`Visitor activity chart coming soon`}
               </StyledChartPlaceholder>
             </StyledSectionContent>
           </StyledSection>
@@ -200,10 +206,10 @@ export const PublicationDetails = ({
           <StyledSection>
             <StyledSectionTitle>
               <IconUsers size={16} />
-              Recent Visitors
+              {t`Recent Visitors`}
             </StyledSectionTitle>
             <StyledSectionContent>
-              <StyledEmptyTable>No recent visitors yet</StyledEmptyTable>
+              <StyledEmptyTable>{t`No recent visitors yet`}</StyledEmptyTable>
             </StyledSectionContent>
           </StyledSection>
         </StyledTwoColumns>
@@ -211,10 +217,10 @@ export const PublicationDetails = ({
         <StyledSection>
           <StyledSectionTitle>
             <IconMessageCircle2 size={16} />
-            Recent Inquiries
+            {t`Recent Inquiries`}
           </StyledSectionTitle>
           <StyledSectionContent>
-            <StyledEmptyTable>No inquiries yet</StyledEmptyTable>
+            <StyledEmptyTable>{t`No inquiries yet`}</StyledEmptyTable>
           </StyledSectionContent>
         </StyledSection>
 
@@ -222,11 +228,11 @@ export const PublicationDetails = ({
           <StyledSection>
             <StyledSectionTitle>
               <IconChartBar size={16} />
-              Price History
+              {t`Price History`}
             </StyledSectionTitle>
             <StyledSectionContent>
               <StyledChartPlaceholder>
-                Price history chart coming soon
+                {t`Price history chart coming soon`}
               </StyledChartPlaceholder>
             </StyledSectionContent>
           </StyledSection>
@@ -234,10 +240,12 @@ export const PublicationDetails = ({
           <StyledSection>
             <StyledSectionTitle>
               <IconBuildingSkyscraper size={16} />
-              Similar Properties
+              {t`Similar Properties`}
             </StyledSectionTitle>
             <StyledSectionContent>
-              <StyledEmptyTable>No similar properties found</StyledEmptyTable>
+              <StyledEmptyTable>
+                {t`No similar properties found`}
+              </StyledEmptyTable>
             </StyledSectionContent>
           </StyledSection>
         </StyledTwoColumns>

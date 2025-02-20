@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { t } from '@lingui/core/macro';
 import { IconCheck, IconInfoCircle } from 'twenty-ui';
 
 const StyledProgressContainer = styled.div`
@@ -32,7 +33,7 @@ const StyledProgressBar = styled.div`
   background: ${({ theme }) => theme.background.tertiary};
   border-radius: ${({ theme }) => theme.border.radius.pill};
   flex-grow: 1;
-  height: 4px;
+  height: 6px;
   overflow: hidden;
   position: relative;
 `;
@@ -57,7 +58,7 @@ const StyledPercentage = styled.div<{ percentage: number }>`
       : percentage < 80
         ? theme.color.blue
         : theme.color.green50};
-  font-size: ${({ theme }) => theme.font.size.sm};
+  font-size: ${({ theme }) => theme.font.size.md};
   font-weight: ${({ theme }) => theme.font.weight.medium};
 `;
 
@@ -69,10 +70,10 @@ export const CompletionProgress = ({ percentage }: CompletionProgressProps) => (
   <StyledProgressContainer>
     <StyledProgressHeader>
       <StyledProgressTitle>
-        <strong>Publication completion -</strong>
+        <strong>{t`Publication completion -`}</strong>
         {percentage < 80
-          ? 'Add more details to improve your listing'
-          : 'Looking good!'}
+          ? t`Add more details to improve your listing`
+          : t`Looking good!`}
         {percentage < 80 ? (
           <IconInfoCircle size={16} />
         ) : (
