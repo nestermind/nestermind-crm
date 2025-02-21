@@ -8,6 +8,7 @@ import {
   SEED_ACME_WORKSPACE_ID,
   SEED_APPLE_WORKSPACE_ID,
 } from 'src/database/typeorm-seeds/core/workspaces';
+import { EnvironmentService } from 'src/engine/core-modules/environment/environment.service';
 import { FeatureFlagKey } from 'src/engine/core-modules/feature-flag/enums/feature-flag-key.enum';
 import { FeatureFlagService } from 'src/engine/core-modules/feature-flag/services/feature-flag.service';
 import { UserWorkspace } from 'src/engine/core-modules/user-workspace/user-workspace.entity';
@@ -49,6 +50,7 @@ export class WorkspaceManagerService {
     private readonly roleService: RoleService,
     private readonly userRoleService: UserRoleService,
     private readonly featureFlagService: FeatureFlagService,
+    private readonly environmentService: EnvironmentService,
   ) {}
 
   /**
@@ -74,9 +76,23 @@ export class WorkspaceManagerService {
         schemaName,
       );
 
+    let defaultMetadataWorkspaceId = this.environmentService.get(
+      'DEFAULT_METADATA_WORKSPACE_ID',
+    );
+
+    if (
+      defaultMetadataWorkspaceId &&
+      !(await this.workspaceDataSourceService.checkSchemaExists(
+        defaultMetadataWorkspaceId,
+      ))
+    ) {
+      defaultMetadataWorkspaceId = '';
+    }
+
     await this.workspaceSyncMetadataService.synchronize({
       workspaceId,
       dataSourceId: dataSourceMetadata.id,
+      defaultMetadataWorkspaceId,
     });
 
     const permissionsEnabled =

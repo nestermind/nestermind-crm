@@ -8,7 +8,13 @@ import {
 import { useIsMobile } from '@/ui/utilities/responsive/hooks/useIsMobile';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
-import React, { useEffect, useRef } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import { Key } from 'ts-key-enum';
 
 const StyledModalDiv = styled(motion.div)<{
@@ -42,6 +48,8 @@ const StyledModalDiv = styled(motion.div)<{
         return theme.modal.size.md;
       case 'large':
         return theme.modal.size.lg;
+      case 'extraLarge':
+        return theme.modal.size.xl;
       default:
         return 'auto';
     }
@@ -137,7 +145,7 @@ const ModalFooter = ({ children, className }: ModalFooterProps) => (
   <StyledFooter className={className}>{children}</StyledFooter>
 );
 
-export type ModalSize = 'small' | 'medium' | 'large';
+export type ModalSize = 'small' | 'medium' | 'large' | 'extraLarge';
 export type ModalPadding = 'none' | 'small' | 'medium' | 'large';
 export type ModalVariants = 'primary' | 'secondary' | 'tertiary';
 
@@ -148,6 +156,7 @@ export type ModalProps = React.PropsWithChildren & {
   hotkeyScope?: ModalHotkeyScope;
   onEnter?: () => void;
   modalVariant?: ModalVariants;
+  closedOnMount?: boolean;
 } & (
     | { isClosable: true; onClose: () => void }
     | { isClosable?: false; onClose?: never }
@@ -159,94 +168,120 @@ const modalAnimation = {
   exit: { opacity: 0 },
 };
 
-export const Modal = ({
-  children,
-  size = 'medium',
-  padding = 'medium',
-  className,
-  hotkeyScope = ModalHotkeyScope.Default,
-  onEnter,
-  isClosable = false,
-  onClose,
-  modalVariant = 'primary',
-}: ModalProps) => {
-  const isMobile = useIsMobile();
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  const {
-    goBackToPreviousHotkeyScope,
-    setHotkeyScopeAndMemorizePreviousScope,
-  } = usePreviousHotkeyScope();
-
-  useEffect(() => {
-    setHotkeyScopeAndMemorizePreviousScope(hotkeyScope);
-    return () => {
-      goBackToPreviousHotkeyScope();
-    };
-  }, [
-    hotkeyScope,
-    setHotkeyScopeAndMemorizePreviousScope,
-    goBackToPreviousHotkeyScope,
-  ]);
-
-  useScopedHotkeys(
-    [Key.Enter],
-    () => {
-      onEnter?.();
-    },
-    hotkeyScope,
-  );
-
-  useScopedHotkeys(
-    [Key.Escape],
-    () => {
-      if (isClosable && onClose !== undefined) {
-        onClose();
-      }
-    },
-    hotkeyScope,
-  );
-
-  useListenClickOutside({
-    refs: [modalRef],
-    listenerId: 'MODAL_CLICK_OUTSIDE_LISTENER_ID',
-    callback: () => {
-      if (isClosable && onClose !== undefined) {
-        onClose();
-      }
-    },
-    mode: ClickOutsideMode.comparePixels,
-  });
-
-  const stopEventPropagation = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
-  return (
-    <StyledBackDrop
-      className="modal-backdrop"
-      onMouseDown={stopEventPropagation}
-      modalVariant={modalVariant}
-    >
-      <StyledModalDiv
-        ref={modalRef}
-        size={size}
-        padding={padding}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        layout
-        modalVariant={modalVariant}
-        variants={modalAnimation}
-        className={className}
-        isMobile={isMobile}
-      >
-        {children}
-      </StyledModalDiv>
-    </StyledBackDrop>
-  );
+export type ModalRefType = {
+  open: () => void;
+  close: () => void;
 };
 
-Modal.Header = ModalHeader;
-Modal.Content = ModalContent;
-Modal.Footer = ModalFooter;
+export const Modal = Object.assign(
+  forwardRef<ModalRefType, ModalProps>((props, ref) => {
+    const {
+      children,
+      size = 'medium',
+      padding = 'medium',
+      className,
+      hotkeyScope = ModalHotkeyScope.Default,
+      onEnter,
+      isClosable = false,
+      onClose,
+      modalVariant = 'primary',
+      closedOnMount = false,
+    } = props;
+    const isMobile = useIsMobile();
+    const modalRef = useRef<HTMLDivElement>(null);
+
+    const [isOpen, setIsOpen] = useState(false);
+    const {
+      goBackToPreviousHotkeyScope,
+      setHotkeyScopeAndMemorizePreviousScope,
+    } = usePreviousHotkeyScope();
+
+    useEffect(() => {
+      setHotkeyScopeAndMemorizePreviousScope(hotkeyScope);
+      return () => {
+        goBackToPreviousHotkeyScope();
+      };
+    }, [
+      hotkeyScope,
+      setHotkeyScopeAndMemorizePreviousScope,
+      goBackToPreviousHotkeyScope,
+    ]);
+
+    useScopedHotkeys(
+      [Key.Enter],
+      () => {
+        onEnter?.();
+      },
+      hotkeyScope,
+    );
+
+    useScopedHotkeys(
+      [Key.Escape],
+      () => {
+        if (isClosable && onClose !== undefined) {
+          onClose();
+        }
+      },
+      hotkeyScope,
+    );
+
+    useListenClickOutside({
+      refs: [modalRef],
+      listenerId: 'MODAL_CLICK_OUTSIDE_LISTENER_ID',
+      callback: () => {
+        if (isClosable && onClose !== undefined) {
+          onClose();
+        }
+      },
+      mode: ClickOutsideMode.comparePixels,
+    });
+
+    const stopEventPropagation = (e: React.MouseEvent) => {
+      e.stopPropagation();
+    };
+
+    useImperativeHandle(ref, () => ({
+      open: () => {
+        setIsOpen(true);
+      },
+      close: () => {
+        setIsOpen(false);
+      },
+    }));
+
+    if (!isOpen && closedOnMount) {
+      return null;
+    }
+
+    return (
+      <StyledBackDrop
+        className="modal-backdrop"
+        onMouseDown={stopEventPropagation}
+        modalVariant={modalVariant}
+      >
+        <StyledModalDiv
+          ref={modalRef}
+          size={size}
+          padding={padding}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          layout
+          modalVariant={modalVariant}
+          variants={modalAnimation}
+          className={className}
+          isMobile={isMobile}
+        >
+          {children}
+        </StyledModalDiv>
+      </StyledBackDrop>
+    );
+  }),
+  {
+    Header: ModalHeader,
+    Content: ModalContent,
+    Footer: ModalFooter,
+  },
+);
+
+Modal.displayName = 'Modal';

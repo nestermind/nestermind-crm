@@ -1,6 +1,5 @@
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useLingui } from '@lingui/react/macro';
 import { isUndefined } from '@sniptt/guards';
 import { ComponentPropsWithoutRef, ReactNode, useMemo } from 'react';
 import { Link } from 'react-router-dom';
@@ -143,7 +142,8 @@ export const SnackBar = ({
   variant = SnackBarVariant.Default,
 }: SnackBarProps) => {
   const theme = useTheme();
-  const { t } = useLingui();
+  // TODO add lingui back
+  // const { t } = useLingui();
   const { animation: progressAnimation, value: progressValue } =
     useProgressAnimation({
       autoPlay: isUndefined(overrideProgressValue),
@@ -215,10 +215,10 @@ export const SnackBar = ({
         <StyledIcon>{icon}</StyledIcon>
         <StyledMessage>{message}</StyledMessage>
         <StyledActions>
-          {!!onCancel && <LightButton title={t`Cancel`} onClick={onCancel} />}
+          {!!onCancel && <LightButton title={`Cancel`} onClick={onCancel} />}
 
           {!!onClose && (
-            <LightIconButton title={t`Close`} Icon={IconX} onClick={onClose} />
+            <LightIconButton title={`Close`} Icon={IconX} onClick={onClose} />
           )}
         </StyledActions>
       </StyledHeader>

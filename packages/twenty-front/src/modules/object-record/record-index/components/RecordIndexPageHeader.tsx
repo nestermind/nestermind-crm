@@ -1,16 +1,21 @@
 import { RecordIndexActionMenu } from '@/action-menu/components/RecordIndexActionMenu';
 import { contextStoreNumberOfSelectedRecordsComponentState } from '@/context-store/states/contextStoreNumberOfSelectedRecordsComponentState';
 import { useFilteredObjectMetadataItems } from '@/object-metadata/hooks/useFilteredObjectMetadataItems';
+import { CoreObjectNameSingular } from '@/object-metadata/types/CoreObjectNameSingular';
 import { isObjectMetadataReadOnly } from '@/object-metadata/utils/isObjectMetadataReadOnly';
+import { CreatePropertyModal } from '@/object-record/record-index/components/CreatePropertyModal';
 import { RecordIndexPageKanbanAddButton } from '@/object-record/record-index/components/RecordIndexPageKanbanAddButton';
 import { RecordIndexPageTableAddButton } from '@/object-record/record-index/components/RecordIndexPageTableAddButton';
 import { useRecordIndexContextOrThrow } from '@/object-record/record-index/contexts/RecordIndexContext';
 import { recordIndexViewTypeState } from '@/object-record/record-index/states/recordIndexViewTypeState';
+import { ModalRefType } from '@/ui/layout/modal/components/Modal';
 import { PageHeaderOpenCommandMenuButton } from '@/ui/layout/page-header/components/PageHeaderOpenCommandMenuButton';
+import { PageAddButton } from '@/ui/layout/page/components/PageAddButton';
 import { PageHeader } from '@/ui/layout/page/components/PageHeader';
 import { useRecoilComponentValueV2 } from '@/ui/utilities/state/component-state/hooks/useRecoilComponentValueV2';
 import { ViewType } from '@/views/types/ViewType';
 import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
+import { useRef } from 'react';
 import { useRecoilValue } from 'recoil';
 import { capitalize, isDefined } from 'twenty-shared';
 import { useIcons } from 'twenty-ui';
@@ -20,7 +25,15 @@ export const RecordIndexPageHeader = () => {
   const { findObjectMetadataItemByNamePlural } =
     useFilteredObjectMetadataItems();
 
-  const { objectNamePlural } = useRecordIndexContextOrThrow();
+  // eslint-disable-next-line @nx/workspace-no-state-useref
+  const modalRef = useRef<ModalRefType>(null);
+
+  const { objectNamePlural, objectNameSingular } =
+    useRecordIndexContextOrThrow();
+
+  const isProperty = objectNameSingular === CoreObjectNameSingular.Property;
+  const isPublication =
+    objectNameSingular === CoreObjectNameSingular.Publication;
 
   const objectMetadataItem =
     findObjectMetadataItemByNamePlural(objectNamePlural);
@@ -60,7 +73,9 @@ export const RecordIndexPageHeader = () => {
         /**
          * TODO: Logic between Table and Kanban should be merged here when we move some states to record-index
          */
-        (isTable ? (
+        (isPublication ? null : isProperty ? (
+          <PageAddButton onClick={() => modalRef.current?.open()} />
+        ) : isTable ? (
           <RecordIndexPageTableAddButton />
         ) : (
           <RecordIndexPageKanbanAddButton />
@@ -72,6 +87,11 @@ export const RecordIndexPageHeader = () => {
           <PageHeaderOpenCommandMenuButton />
         </>
       )}
+      <CreatePropertyModal
+        ref={modalRef}
+        onClose={() => modalRef.current?.close()}
+        objectNameSingular={objectNameSingular}
+      />
     </PageHeader>
   );
 };

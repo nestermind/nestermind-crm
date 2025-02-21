@@ -1,3 +1,4 @@
+import { SectionContent } from '@/record-edit/types/EditSectionTypes';
 import { TabListFromUrlOptionalEffect } from '@/ui/layout/tab/components/TabListFromUrlOptionalEffect';
 import { useTabList } from '@/ui/layout/tab/hooks/useTabList';
 import { TabListScope } from '@/ui/layout/tab/scopes/TabListScope';
@@ -17,6 +18,7 @@ export type SingleTabProps = {
   disabled?: boolean;
   pill?: string | React.ReactElement;
   cards?: LayoutCard[];
+  content?: SectionContent[];
   logo?: string;
 };
 

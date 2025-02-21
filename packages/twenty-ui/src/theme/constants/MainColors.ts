@@ -6,7 +6,7 @@ export const MAIN_COLORS = {
   turquoise: '#15de8f',
   sky: '#00e0ff',
   blue: '#1961ed',
-  purple: '#915ffd',
+  purple: '#7D55FF',
   pink: '#f54bd0',
   red: '#f83e3e',
   orange: '#ff7222',

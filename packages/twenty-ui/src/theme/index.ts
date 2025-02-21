@@ -23,6 +23,7 @@ export * from './constants/HoverBackground';
 export * from './constants/Icon';
 export * from './constants/IllustrationIconDark';
 export * from './constants/IllustrationIconLight';
+export * from './constants/LargeDesktopViewport';
 export * from './constants/MainColorNames';
 export * from './constants/MainColors';
 export * from './constants/MobileViewport';

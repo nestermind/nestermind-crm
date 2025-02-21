@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
 import { FeatureFlagMap } from 'src/engine/core-modules/feature-flag/interfaces/feature-flag-map.interface';
+import { WorkspaceEntityMetadataArgs } from 'src/engine/twenty-orm/interfaces/workspace-entity-metadata-args.interface';
 import { PartialWorkspaceEntity } from 'src/engine/workspace-manager/workspace-sync-metadata/interfaces/partial-object-metadata.interface';
 import { WorkspaceSyncContext } from 'src/engine/workspace-manager/workspace-sync-metadata/interfaces/workspace-sync-context.interface';
 
+import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
+import { isObjectMetadata } from 'src/engine/metadata-modules/object-metadata/utils/is-object-metadata';
 import { BaseWorkspaceEntity } from 'src/engine/twenty-orm/base.workspace-entity';
 import { metadataArgsStorage } from 'src/engine/twenty-orm/storage/metadata-args.storage';
 import { isGatedAndNotEnabled } from 'src/engine/workspace-manager/workspace-sync-metadata/utils/is-gate-and-not-enabled.util';
@@ -11,7 +14,9 @@ import { isGatedAndNotEnabled } from 'src/engine/workspace-manager/workspace-syn
 @Injectable()
 export class StandardObjectFactory {
   create(
-    standardObjectMetadataDefinitions: (typeof BaseWorkspaceEntity)[],
+    standardObjectMetadataDefinitions:
+      | (typeof BaseWorkspaceEntity)[]
+      | ObjectMetadataEntity[],
     context: WorkspaceSyncContext,
     workspaceFeatureFlagsMap: FeatureFlagMap,
   ): Omit<PartialWorkspaceEntity, 'fields' | 'indexMetadatas'>[] {
@@ -23,11 +28,38 @@ export class StandardObjectFactory {
   }
 
   private createObjectMetadata(
-    target: typeof BaseWorkspaceEntity,
+    target: typeof BaseWorkspaceEntity | ObjectMetadataEntity,
     context: WorkspaceSyncContext,
     workspaceFeatureFlagsMap: FeatureFlagMap,
   ): Omit<PartialWorkspaceEntity, 'fields' | 'indexMetadatas'> | undefined {
-    const workspaceEntityMetadataArgs =
+    if (isObjectMetadata(target)) {
+      const labelIdentifierStandardId = target.fields.find(
+        (field) => field.id === target.labelIdentifierFieldMetadataId,
+      )?.standardId;
+
+      const imageIdentifierStandardId = target.fields.find(
+        (field) => field.id === target.imageIdentifierFieldMetadataId,
+      )?.standardId;
+
+      const {
+        id: _1,
+        createdAt: _2,
+        updatedAt: _3,
+        fields: _4,
+        ...rest
+      } = target;
+
+      return {
+        ...rest,
+        workspaceId: context.workspaceId,
+        dataSourceId: context.dataSourceId,
+        standardId: target.standardId ?? '',
+        labelIdentifierStandardId,
+        imageIdentifierStandardId,
+      };
+    }
+
+    const workspaceEntityMetadataArgs: WorkspaceEntityMetadataArgs | undefined =
       metadataArgsStorage.filterEntities(target);
 
     if (!workspaceEntityMetadataArgs) {

@@ -33,7 +33,6 @@ const StyledTextArea = styled(TextareaAutosize)`
   resize: none;
   max-height: 400px;
   width: calc(100% - ${({ theme }) => theme.spacing(7)});
-
   line-height: 18px;
 `;
 

@@ -13,5 +13,9 @@ export const getEmptyStateSubTitle = (
     return t`Run a workflow and return here to view its executions`;
   }
 
+  if (objectNameSingular === CoreObjectNameSingular.Publication) {
+    return t`Create your first publication from a property`;
+  }
+
   return t`Use our API or add your first ${objectLabel} manually`;
 };

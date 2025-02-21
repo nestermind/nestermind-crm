@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 export type ButtonSize = 'medium' | 'small';
 export type ButtonPosition = 'standalone' | 'left' | 'middle' | 'right';
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
-export type ButtonAccent = 'default' | 'blue' | 'danger';
+export type ButtonAccent = 'default' | 'blue' | 'danger' | 'purple';
 
 export type ButtonProps = {
   className?: string;
@@ -91,6 +91,41 @@ const StyledButton = styled('button', {
                   ? theme.background.quaternary
                   : theme.background.tertiary};
               }
+            `;
+          case 'purple':
+            return css`
+              background: ${!inverted
+                ? theme.color.purple
+                : theme.background.primary};
+              border-color: ${!inverted
+                ? focus
+                  ? theme.color.purple
+                  : theme.background.transparent.light
+                : theme.background.transparent.light};
+              border-width: 1px 1px 1px 1px !important;
+              box-shadow: ${!disabled && focus
+                ? `0 0 0 3px ${
+                    !inverted
+                      ? theme.accent.tertiary
+                      : theme.background.transparent.medium
+                  }`
+                : 'none'};
+              color: ${!inverted ? theme.grayScale.gray0 : theme.color.purple};
+              opacity: ${disabled ? 0.24 : 1};
+              ${disabled
+                ? ''
+                : css`
+                    &:hover {
+                      background: ${!inverted
+                        ? theme.color.purple50
+                        : theme.background.secondary};
+                    }
+                    &:active {
+                      background: ${!inverted
+                        ? theme.color.purple60
+                        : theme.background.tertiary};
+                    }
+                  `}
             `;
           case 'blue':
             return css`
@@ -362,6 +397,8 @@ const StyledSeparator = styled.div<{
 }>`
   background: ${({ theme, accent }) => {
     switch (accent) {
+      case 'purple':
+        return theme.color.purple;
       case 'blue':
         return theme.border.color.blue;
       case 'danger':
@@ -382,6 +419,8 @@ const StyledShortcutLabel = styled.div<{
 }>`
   color: ${({ theme, variant, accent }) => {
     switch (accent) {
+      case 'purple':
+        return theme.color.purple;
       case 'blue':
         return theme.border.color.blue;
       case 'danger':

@@ -13,17 +13,31 @@ services:
       && chown -R 1000:1000 /tmp/docker-data"
 
   server:
-    image: twentycrm/twenty:${TAG:-latest}
+    platform: linux/amd64
+    build:
+      context: ../..
+      dockerfile: packages/twenty-docker/twenty/Dockerfile
+    image: nestermindacr.azurecr.io/nestermind-crm:${TAG:-latest}
     volumes:
       - server-local-data:/app/packages/twenty-server/${STORAGE_LOCAL_PATH:-.local-storage}
       - docker-data:/app/docker-data
     ports:
-      - "3000:3000"
+      - '3000:3000'
+      - '443:3000'
+      - '80:3000'
     environment:
       NODE_PORT: 3000
-      PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@${PG_DATABASE_HOST:-db}:${PG_DATABASE_PORT:-5432}/default
+      PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@${PG_DATABASE_HOST:-db}:${PG_DATABASE_PORT:-5432}/${PG_DATABASE_NAME:-default}
       SERVER_URL: ${SERVER_URL}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      FRONT_PROTOCOL: ${FRONT_PROTOCOL}
+      FRONT_DOMAIN: ${FRONT_DOMAIN}
+      FRONT_PORT: ${FRONT_PORT}
+      REDIS_URL: ${REDIS_URL:-redis://:${REDIS_PASSWORD:-nestermind-redis-password}@redis:6379}
+
+      LOG_LEVELS: ${LOG_LEVELS}
+
+      SSL_KEY_PATH: ${SSL_KEY_PATH}
+      SSL_CERT_PATH: ${SSL_CERT_PATH}
 
       STORAGE_TYPE: ${STORAGE_TYPE}
       STORAGE_S3_REGION: ${STORAGE_S3_REGION}
@@ -31,6 +45,31 @@ services:
       STORAGE_S3_ENDPOINT: ${STORAGE_S3_ENDPOINT}
 
       APP_SECRET: ${APP_SECRET}
+
+      DEFAULT_METADATA_WORKSPACE_ID: ${DEFAULT_METADATA_WORKSPACE_ID}
+      SIGN_IN_PREFILLED: ${SIGN_IN_PREFILLED}
+      IS_MULTIWORKSPACE_ENABLED: ${IS_MULTIWORKSPACE_ENABLED}
+
+      # Messaging
+      MESSAGING_PROVIDER_GMAIL_ENABLED: ${MESSAGING_PROVIDER_GMAIL_ENABLED}
+      CALENDAR_PROVIDER_GOOGLE_ENABLED: ${CALENDAR_PROVIDER_GOOGLE_ENABLED}
+      MESSAGING_PROVIDER_MICROSOFT_ENABLED: ${MESSAGING_PROVIDER_MICROSOFT_ENABLED}
+      CALENDAR_PROVIDER_MICROSOFT_ENABLED: ${CALENDAR_PROVIDER_MICROSOFT_ENABLED}
+      AUTH_GOOGLE_CLIENT_ID: ${AUTH_GOOGLE_CLIENT_ID}
+      AUTH_GOOGLE_CLIENT_SECRET: ${AUTH_GOOGLE_CLIENT_SECRET}
+      AUTH_GOOGLE_CALLBACK_URL: ${AUTH_GOOGLE_CALLBACK_URL}
+      AUTH_GOOGLE_APIS_CALLBACK_URL: ${AUTH_GOOGLE_APIS_CALLBACK_URL}
+
+      # Email
+      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME}
+      EMAIL_SYSTEM_ADDRESS: ${EMAIL_SYSTEM_ADDRESS}
+      EMAIL_DRIVER: ${EMAIL_DRIVER}
+      EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
+      EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
+      EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
+      EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+
     depends_on:
       change-vol-ownership:
         condition: service_completed_successfully
@@ -44,13 +83,33 @@ services:
     restart: always
 
   worker:
-    image: twentycrm/twenty:${TAG:-latest}
-    command: ["yarn", "worker:prod"]
+    platform: linux/amd64
+    build:
+      context: ../..
+      dockerfile: packages/twenty-docker/twenty/Dockerfile
+    image: nestermindacr.azurecr.io/nestermind-crm:${TAG:-latest}
+    command: >
+      /bin/sh -c "
+      yarn worker:prod &
+      sleep 30 &&
+      yarn command:prod crons:start \\
+        cron:messaging:messages-import \\
+        cron:messaging:message-list-fetch \\
+        cron:calendar:calendar-event-list-fetch \\
+        cron:calendar:calendar-events-import \\
+        cron:messaging:ongoing-stale \\
+        cron:calendar:ongoing-stale &&
+      wait"
     environment:
-      PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@${PG_DATABASE_HOST:-db}:${PG_DATABASE_PORT:-5432}/default
+      PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-postgres}:${PG_DATABASE_PASSWORD:-postgres}@${PG_DATABASE_HOST:-db}:${PG_DATABASE_PORT:-5432}/${PG_DATABASE_NAME:-default}
       SERVER_URL: ${SERVER_URL}
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
-      DISABLE_DB_MIGRATIONS: "true" # it already runs on the server
+      FRONT_PROTOCOL: ${FRONT_PROTOCOL}
+      FRONT_DOMAIN: ${FRONT_DOMAIN}
+      FRONT_PORT: ${FRONT_PORT}
+      REDIS_URL: ${REDIS_URL:-redis://:${REDIS_PASSWORD:-nestermind-redis-password}@redis:6379}
+      DISABLE_DB_MIGRATIONS: 'true' # it already runs on the server
+
+      LOG_LEVELS: ${LOG_LEVELS}
 
       STORAGE_TYPE: ${STORAGE_TYPE}
       STORAGE_S3_REGION: ${STORAGE_S3_REGION}
@@ -58,6 +117,31 @@ services:
       STORAGE_S3_ENDPOINT: ${STORAGE_S3_ENDPOINT}
 
       APP_SECRET: ${APP_SECRET}
+
+      DEFAULT_METADATA_WORKSPACE_ID: ${DEFAULT_METADATA_WORKSPACE_ID}
+      SIGN_IN_PREFILLED: ${SIGN_IN_PREFILLED}
+      IS_MULTIWORKSPACE_ENABLED: ${IS_MULTIWORKSPACE_ENABLED}
+
+      # Messaging
+      MESSAGING_PROVIDER_GMAIL_ENABLED: ${MESSAGING_PROVIDER_GMAIL_ENABLED}
+      CALENDAR_PROVIDER_GOOGLE_ENABLED: ${CALENDAR_PROVIDER_GOOGLE_ENABLED}
+      MESSAGING_PROVIDER_MICROSOFT_ENABLED: ${MESSAGING_PROVIDER_MICROSOFT_ENABLED}
+      CALENDAR_PROVIDER_MICROSOFT_ENABLED: ${CALENDAR_PROVIDER_MICROSOFT_ENABLED}
+      AUTH_GOOGLE_CLIENT_ID: ${AUTH_GOOGLE_CLIENT_ID}
+      AUTH_GOOGLE_CLIENT_SECRET: ${AUTH_GOOGLE_CLIENT_SECRET}
+      AUTH_GOOGLE_CALLBACK_URL: ${AUTH_GOOGLE_CALLBACK_URL}
+      AUTH_GOOGLE_APIS_CALLBACK_URL: ${AUTH_GOOGLE_APIS_CALLBACK_URL}
+
+      # Email
+      EMAIL_FROM_ADDRESS: ${EMAIL_FROM_ADDRESS}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME}
+      EMAIL_SYSTEM_ADDRESS: ${EMAIL_SYSTEM_ADDRESS}
+      EMAIL_DRIVER: ${EMAIL_DRIVER}
+      EMAIL_SMTP_HOST: ${EMAIL_SMTP_HOST}
+      EMAIL_SMTP_PORT: ${EMAIL_SMTP_PORT}
+      EMAIL_SMTP_USER: ${EMAIL_SMTP_USER}
+      EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+
     depends_on:
       db:
         condition: service_healthy
@@ -66,14 +150,17 @@ services:
     restart: always
 
   db:
-    image: twentycrm/twenty-postgres-spilo:${TAG:-latest}
+    build:
+      context: ../..
+      dockerfile: packages/twenty-docker/twenty-postgres-spilo/Dockerfile
+    image: twentycrm/twenty-postgres-spilo:${DB_TAG:-latest}
     volumes:
       - db-data:/home/postgres/pgdata
     environment:
       PGUSER_SUPERUSER: ${PG_DATABASE_USER:-postgres}
       PGPASSWORD_SUPERUSER: ${PG_DATABASE_PASSWORD:-postgres}
-      ALLOW_NOSSL: "true"
-      SPILO_PROVIDER: "local"
+      ALLOW_NOSSL: 'true'
+      SPILO_PROVIDER: 'local'
     healthcheck:
       test: pg_isready -U ${PG_DATABASE_USER:-postgres} -h localhost -d postgres
       interval: 5s
@@ -83,6 +170,7 @@ services:
 
   redis:
     image: redis
+    command: redis-server --requirepass ${REDIS_PASSWORD:-nestermind-redis-password}
     restart: always
 
 volumes:

@@ -11,6 +11,7 @@ import { NAV_DRAWER_WIDTHS } from '@/ui/navigation/navigation-drawer/constants/N
 
 import { useIsSettingsDrawer } from '@/navigation/hooks/useIsSettingsDrawer';
 import { NavigationDrawerSection } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerSection';
+import NestermindBranding from '@/ui/navigation/navigation-drawer/components/NavigationNestermindBranding';
 import { isNavigationDrawerExpandedState } from '../../states/isNavigationDrawerExpanded';
 import { NavigationDrawerBackButton } from './NavigationDrawerBackButton';
 import { NavigationDrawerHeader } from './NavigationDrawerHeader';
@@ -122,6 +123,7 @@ export const NavigationDrawer = ({
         <StyledItemsContainer isSettings={isSettingsDrawer}>
           {children}
         </StyledItemsContainer>
+        <NestermindBranding size={75} />
         <NavigationDrawerSection>{footer}</NavigationDrawerSection>
       </StyledContainer>
     </StyledAnimatedContainer>

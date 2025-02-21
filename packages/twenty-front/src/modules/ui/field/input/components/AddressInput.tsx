@@ -15,10 +15,13 @@ import { useRecoilValue } from 'recoil';
 import { isDefined } from 'twenty-shared';
 import { MOBILE_VIEWPORT } from 'twenty-ui';
 
-const StyledAddressContainer = styled.div`
-  padding: 4px 8px;
+const StyledAddressContainer = styled.div<{
+  noPadding?: boolean;
+  fullWidth?: boolean;
+}>`
+  padding: ${(p) => (p.noPadding ? 0 : `4px 8px`)};
 
-  width: 344px;
+  width: ${(p) => (p.fullWidth ? '100%' : '344px')};
   > div {
     margin-bottom: 6px;
   }
@@ -60,17 +63,25 @@ export type AddressInputProps = {
   hotkeyScope: string;
   clearable?: boolean;
   onChange?: (updatedValue: FieldAddressDraftValue) => void;
+  autofocus?: boolean;
+  listenToOutsideClick?: boolean;
+  fullWidth?: boolean;
+  noPadding?: boolean;
 };
 
 export const AddressInput = ({
   value,
+  autofocus = true,
   hotkeyScope,
   onTab,
   onShiftTab,
+  listenToOutsideClick = true,
   onEnter,
   onEscape,
   onClickOutside,
   onChange,
+  fullWidth,
+  noPadding,
 }: AddressInputProps) => {
   const [internalValue, setInternalValue] = useState(value);
   const addressStreet1InputRef = useRef<HTMLInputElement>(null);
@@ -191,7 +202,9 @@ export const AddressInput = ({
         return;
       }
 
-      event.stopImmediatePropagation();
+      if (listenToOutsideClick) {
+        event.stopImmediatePropagation();
+      }
 
       closeCountryDropdown();
       onClickOutside?.(event, internalValue);
@@ -205,9 +218,13 @@ export const AddressInput = ({
   }, [value]);
 
   return (
-    <StyledAddressContainer ref={wrapperRef}>
+    <StyledAddressContainer
+      ref={wrapperRef}
+      noPadding={noPadding}
+      fullWidth={fullWidth}
+    >
       <TextInputV2
-        autoFocus
+        autoFocus={autofocus}
         value={internalValue.addressStreet1 ?? ''}
         ref={inputRefs['addressStreet1']}
         label="ADDRESS 1"

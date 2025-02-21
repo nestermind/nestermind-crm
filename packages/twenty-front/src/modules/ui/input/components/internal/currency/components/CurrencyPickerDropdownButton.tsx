@@ -51,10 +51,12 @@ export const CurrencyPickerDropdownButton = ({
   valueCode,
   onChange,
   currencies,
+  dropdownId,
 }: {
   valueCode: string;
   onChange: (currency: Currency) => void;
   currencies: Currency[];
+  dropdownId?: string;
 }) => {
   const theme = useTheme();
 
@@ -73,7 +75,7 @@ export const CurrencyPickerDropdownButton = ({
 
   return (
     <Dropdown
-      dropdownId="currency-picker-dropdown-id"
+      dropdownId={dropdownId ?? 'currency-picker-dropdown-id'}
       dropdownHotkeyScope={{ scope: CurrencyPickerHotkeyScope.CurrencyPicker }}
       clickableComponent={
         <StyledDropdownButtonContainer>

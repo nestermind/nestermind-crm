@@ -59,7 +59,7 @@ const StyledEmptyField = styled.div`
 
 export const RecordInlineCellDisplayMode = ({
   children,
-}: React.PropsWithChildren<unknown>) => {
+}: React.PropsWithChildren) => {
   const { isFocused } = useFieldFocus();
 
   const { t } = useLingui();

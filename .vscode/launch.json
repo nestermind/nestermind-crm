@@ -37,13 +37,12 @@
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "npx",
-      "runtimeVersion": "18",
       "runtimeArgs": [
         "nx",
         "run",
         "twenty-server:command",
-        "my-command",
-        "--my-parameter value"
+        "crons:start",
+        "cron:messaging:message-list-fetch"
       ],
       "outputCapture": "std",
       "internalConsoleOptions": "openOnSessionStart",

@@ -5,7 +5,11 @@ import { useMultiSelectFieldDisplay } from '@/object-record/record-field/meta-ty
 import { MultiSelectDisplay } from '@/ui/field/display/components/MultiSelectDisplay';
 import { ExpandableList } from '@/ui/layout/expandable-list/components/ExpandableList';
 
-export const MultiSelectFieldDisplay = () => {
+export const MultiSelectFieldDisplay = ({
+  wrap = false,
+}: {
+  wrap?: boolean;
+}) => {
   const { fieldValue, fieldDefinition } = useMultiSelectFieldDisplay();
 
   const { isFocused } = useFieldFocus();
@@ -31,6 +35,7 @@ export const MultiSelectFieldDisplay = () => {
   ) : (
     <MultiSelectDisplay
       values={fieldValue}
+      wrap={wrap}
       options={fieldDefinition.metadata.options}
     />
   );

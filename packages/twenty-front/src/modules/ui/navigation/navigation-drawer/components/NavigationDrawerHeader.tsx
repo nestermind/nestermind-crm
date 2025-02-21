@@ -25,7 +25,7 @@ const StyledSingleWorkspaceContainer = styled(StyledContainer)`
 
 const StyledName = styled.div`
   color: ${({ theme }) => theme.font.color.primary};
-  font-family: 'Inter';
+  font-family: ${({ theme }) => theme.font.family};
   font-size: ${({ theme }) => theme.font.size.md};
   font-weight: ${({ theme }) => theme.font.weight.medium};
 `;

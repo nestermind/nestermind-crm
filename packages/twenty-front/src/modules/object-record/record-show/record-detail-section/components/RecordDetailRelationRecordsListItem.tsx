@@ -7,7 +7,6 @@ import {
   IconChevronDown,
   IconComponent,
   IconDotsVertical,
-  IconTrash,
   IconUnlink,
   LightIconButton,
   MenuItem,
@@ -243,14 +242,6 @@ export const RecordDetailRelationRecordsListItem = ({
                     text="Detach"
                     onClick={handleDetach}
                   />
-                  {!isAccountOwnerRelation && (
-                    <MenuItem
-                      LeftIcon={IconTrash}
-                      text="Delete"
-                      accent="danger"
-                      onClick={handleDelete}
-                    />
-                  )}
                 </DropdownMenuItemsContainer>
               }
               dropdownHotkeyScope={{ scope: dropdownScopeId }}

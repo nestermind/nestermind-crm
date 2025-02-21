@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 
+import { SectionFieldType } from '@/record-edit/types/EditSectionTypes';
 import { FieldDefinition } from '../types/FieldDefinition';
 import { FieldMetadata } from '../types/FieldMetadata';
 
@@ -33,6 +34,7 @@ export type GenericFieldContextType = {
   overridenIsFieldEmpty?: boolean;
   displayedMaxRows?: number;
   isDisplayModeFixHeight?: boolean;
+  formType?: SectionFieldType;
 };
 
 export const FieldContext = createContext<GenericFieldContextType>(

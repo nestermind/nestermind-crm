@@ -8,7 +8,7 @@ import { RGBA } from './Rgba';
 export const BACKGROUND_LIGHT = {
   noisy: `url(${LightNoise.toString()});`,
   primary: GRAY_SCALE.gray0,
-  secondary: GRAY_SCALE.gray10,
+  secondary: '#F7F7F7',
   tertiary: GRAY_SCALE.gray15,
   quaternary: GRAY_SCALE.gray20,
   invertedPrimary: GRAY_SCALE.gray60,

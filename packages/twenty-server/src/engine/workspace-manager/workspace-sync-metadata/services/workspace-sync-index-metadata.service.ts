@@ -85,7 +85,14 @@ export class WorkspaceSyncIndexMetadataService {
 
     // Generate index metadata from models
     const standardIndexMetadataCollection = this.standardIndexFactory.create(
-      standardObjectMetadataDefinitions,
+      context.defaultMetadataWorkspaceId
+        ? await indexMetadataRepository.find({
+            where: {
+              workspaceId: context.defaultMetadataWorkspaceId,
+            },
+            relations: ['objectMetadata', 'indexFieldMetadatas.fieldMetadata'],
+          })
+        : standardObjectMetadataDefinitions,
       context,
       originalStandardObjectMetadataMap,
       originalCustomObjectMetadataMap,

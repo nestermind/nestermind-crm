@@ -59,9 +59,7 @@ const StyledInlineCellBaseContainer = styled.div<{
 }>`
   align-items: flex-start;
   box-sizing: border-box;
-  width: 100%;
   display: flex;
-  height: fit-content;
   line-height: ${({ isDisplayModeFixHeight }) =>
     isDisplayModeFixHeight ? `24px` : `18px`};
   gap: ${({ theme }) => theme.spacing(1)};

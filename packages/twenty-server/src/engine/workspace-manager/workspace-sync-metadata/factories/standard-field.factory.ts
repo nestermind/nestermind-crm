@@ -13,6 +13,8 @@ import {
 } from 'src/engine/workspace-manager/workspace-sync-metadata/interfaces/partial-field-metadata.interface';
 import { WorkspaceSyncContext } from 'src/engine/workspace-manager/workspace-sync-metadata/interfaces/workspace-sync-context.interface';
 
+import { FieldMetadataEntity } from 'src/engine/metadata-modules/field-metadata/field-metadata.entity';
+import { isFieldMetadata } from 'src/engine/metadata-modules/field-metadata/utils/is-field-metadata';
 import { RelationMetadataType } from 'src/engine/metadata-modules/relation-metadata/relation-metadata.entity';
 import { BaseWorkspaceEntity } from 'src/engine/twenty-orm/base.workspace-entity';
 import { metadataArgsStorage } from 'src/engine/twenty-orm/storage/metadata-args.storage';
@@ -23,13 +25,17 @@ import { isGatedAndNotEnabled } from 'src/engine/workspace-manager/workspace-syn
 @Injectable()
 export class StandardFieldFactory {
   create(
-    target: typeof BaseWorkspaceEntity,
+    target:
+      | typeof BaseWorkspaceEntity
+      | FieldMetadataEntity<FieldMetadataType | 'default'>,
     context: WorkspaceSyncContext,
     workspaceFeatureFlagsMap: FeatureFlagMap,
   ): (PartialFieldMetadata | PartialComputedFieldMetadata)[];
 
   create(
-    targets: (typeof BaseWorkspaceEntity)[],
+    targets:
+      | (typeof BaseWorkspaceEntity)[]
+      | FieldMetadataEntity<FieldMetadataType | 'default'>[],
     context: WorkspaceSyncContext,
     workspaceFeatureFlagsMap: FeatureFlagMap, // Map of standardId to field metadata
   ): Map<string, (PartialFieldMetadata | PartialComputedFieldMetadata)[]>;
@@ -37,7 +43,9 @@ export class StandardFieldFactory {
   create(
     targetOrTargets:
       | typeof BaseWorkspaceEntity
-      | (typeof BaseWorkspaceEntity)[],
+      | (typeof BaseWorkspaceEntity)[]
+      | FieldMetadataEntity<FieldMetadataType | 'default'>
+      | FieldMetadataEntity<FieldMetadataType | 'default'>[],
     context: WorkspaceSyncContext,
     workspaceFeatureFlagsMap: FeatureFlagMap,
   ):
@@ -45,6 +53,21 @@ export class StandardFieldFactory {
     | Map<string, (PartialFieldMetadata | PartialComputedFieldMetadata)[]> {
     if (Array.isArray(targetOrTargets)) {
       return targetOrTargets.reduce((acc, target) => {
+        if (isFieldMetadata<FieldMetadataType | 'default'>(target)) {
+          if (!target.object.standardId) {
+            throw new Error('object.standardId not found');
+          }
+
+          const existingFieldMetadata = acc.get(target.object.standardId);
+
+          acc.set(target.object.standardId, [
+            ...(existingFieldMetadata ?? []),
+            ...this.create(target, context, workspaceFeatureFlagsMap),
+          ]);
+
+          return acc;
+        }
+
         const workspaceEntityMetadataArgs =
           metadataArgsStorage.filterEntities(target);
 
@@ -68,6 +91,25 @@ export class StandardFieldFactory {
 
         return acc;
       }, new Map<string, (PartialFieldMetadata | PartialComputedFieldMetadata)[]>());
+    }
+
+    if (isFieldMetadata<FieldMetadataType | 'default'>(targetOrTargets)) {
+      const {
+        id: _1,
+        createdAt: _2,
+        updatedAt: _3,
+        object: _4,
+        objectMetadataId: _5,
+        ...rest
+      } = targetOrTargets;
+
+      return [
+        {
+          ...rest,
+          workspaceId: context.workspaceId,
+          standardId: targetOrTargets.standardId ?? '',
+        },
+      ];
     }
 
     const workspaceEntityMetadataArgs =

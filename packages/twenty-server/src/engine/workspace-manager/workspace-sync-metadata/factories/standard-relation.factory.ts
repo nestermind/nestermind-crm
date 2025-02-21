@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
 
-import { WorkspaceSyncContext } from 'src/engine/workspace-manager/workspace-sync-metadata/interfaces/workspace-sync-context.interface';
 import { FeatureFlagMap } from 'src/engine/core-modules/feature-flag/interfaces/feature-flag-map.interface';
+import { WorkspaceSyncContext } from 'src/engine/workspace-manager/workspace-sync-metadata/interfaces/workspace-sync-context.interface';
 
-import { isGatedAndNotEnabled } from 'src/engine/workspace-manager/workspace-sync-metadata/utils/is-gate-and-not-enabled.util';
-import { assert } from 'src/utils/assert';
+import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
 import {
   RelationMetadataEntity,
   RelationMetadataType,
 } from 'src/engine/metadata-modules/relation-metadata/relation-metadata.entity';
-import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
-import { convertClassNameToObjectMetadataName } from 'src/engine/workspace-manager/workspace-sync-metadata/utils/convert-class-to-object-metadata-name.util';
+import { isRelationMetadata } from 'src/engine/metadata-modules/relation-metadata/utils/is-relation-metadata';
 import { BaseWorkspaceEntity } from 'src/engine/twenty-orm/base.workspace-entity';
 import { metadataArgsStorage } from 'src/engine/twenty-orm/storage/metadata-args.storage';
+import { convertClassNameToObjectMetadataName } from 'src/engine/workspace-manager/workspace-sync-metadata/utils/convert-class-to-object-metadata-name.util';
+import { isGatedAndNotEnabled } from 'src/engine/workspace-manager/workspace-sync-metadata/utils/is-gate-and-not-enabled.util';
+import { assert } from 'src/utils/assert';
 
 interface CustomRelationFactory {
   object: ObjectMetadataEntity;
@@ -29,7 +30,9 @@ export class StandardRelationFactory {
   ): Partial<RelationMetadataEntity>[];
 
   create(
-    standardObjectMetadataDefinitions: (typeof BaseWorkspaceEntity)[],
+    standardObjectMetadataDefinitions:
+      | (typeof BaseWorkspaceEntity)[]
+      | RelationMetadataEntity[],
     context: WorkspaceSyncContext,
     originalObjectMetadataMap: Record<string, ObjectMetadataEntity>,
     workspaceFeatureFlagsMap: FeatureFlagMap,
@@ -38,6 +41,7 @@ export class StandardRelationFactory {
   create(
     standardObjectMetadataDefinitionsOrCustomObjectFactories:
       | (typeof BaseWorkspaceEntity)[]
+      | RelationMetadataEntity[]
       | {
           object: ObjectMetadataEntity;
           metadata: typeof BaseWorkspaceEntity;
@@ -50,14 +54,76 @@ export class StandardRelationFactory {
       (
         standardObjectMetadata:
           | typeof BaseWorkspaceEntity
-          | CustomRelationFactory,
-      ) =>
-        this.createRelationMetadata(
+          | CustomRelationFactory
+          | RelationMetadataEntity,
+      ) => {
+        if (isRelationMetadata(standardObjectMetadata)) {
+          // Compute reflect relation metadata
+          const fromObjectNameSingular =
+            standardObjectMetadata.fromObjectMetadata.nameSingular;
+          const toObjectNameSingular =
+            standardObjectMetadata.toObjectMetadata.nameSingular;
+          const fromFieldMetadataName =
+            standardObjectMetadata.fromFieldMetadata.name;
+          const toFieldMetadataName =
+            standardObjectMetadata.toFieldMetadata.name;
+
+          const fromObjectMetadata =
+            originalObjectMetadataMap[fromObjectNameSingular];
+
+          assert(
+            fromObjectMetadata,
+            `Object ${fromObjectNameSingular} not found in DB 
+      for relation FROM defined in class ${fromObjectNameSingular}`,
+          );
+
+          const toObjectMetadata =
+            originalObjectMetadataMap[toObjectNameSingular];
+
+          assert(
+            toObjectMetadata,
+            `Object ${toObjectNameSingular} not found in DB
+      for relation TO defined in class ${fromObjectNameSingular}`,
+          );
+
+          const fromFieldMetadata = fromObjectMetadata?.fields.find(
+            (field) => field.name === fromFieldMetadataName,
+          );
+
+          assert(
+            fromFieldMetadata,
+            `Field ${fromFieldMetadataName} not found in object ${fromObjectNameSingular}
+      for relation FROM defined in class ${fromObjectNameSingular}`,
+          );
+
+          const toFieldMetadata = toObjectMetadata?.fields.find(
+            (field) => field.name === toFieldMetadataName,
+          );
+
+          assert(
+            toFieldMetadata,
+            `Field ${toFieldMetadataName} not found in object ${toObjectNameSingular}
+      for relation TO defined in class ${fromObjectNameSingular}`,
+          );
+
+          return {
+            relationType: standardObjectMetadata.relationType,
+            fromObjectMetadataId: fromObjectMetadata?.id,
+            toObjectMetadataId: toObjectMetadata?.id,
+            fromFieldMetadataId: fromFieldMetadata?.id,
+            toFieldMetadataId: toFieldMetadata?.id,
+            workspaceId: context.workspaceId,
+            onDeleteAction: standardObjectMetadata.onDeleteAction,
+          };
+        }
+
+        return this.createRelationMetadata(
           standardObjectMetadata,
           context,
           originalObjectMetadataMap,
           workspaceFeatureFlagsMap,
-        ),
+        );
+      },
     );
   }
 

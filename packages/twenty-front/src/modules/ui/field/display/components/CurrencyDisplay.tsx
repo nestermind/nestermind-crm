@@ -42,14 +42,9 @@ export const CurrencyDisplay = ({ currencyValue }: CurrencyDisplayProps) => {
     <StyledEllipsisDisplay>
       {isDefined(CurrencyIcon) && amountToDisplay !== null && (
         <>
-          <CurrencyIcon
-            color={theme.font.color.primary}
-            size={theme.icon.size.md}
-            stroke={theme.icon.stroke.sm}
-          />{' '}
+          <div>{`${currencyValue?.currencyCode} ${formatAmount(amountToDisplay)}`}</div>
         </>
       )}
-      {amountToDisplay !== null ? formatAmount(amountToDisplay) : ''}
     </StyledEllipsisDisplay>
   );
 };

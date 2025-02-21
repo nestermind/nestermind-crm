@@ -339,12 +339,15 @@ export class WorkspaceMetadataUpdaterService {
       };
     };
 
+    const test = storage.indexMetadataCreateCollection.map(
+      convertIndexMetadataForSaving,
+    );
+
     /**
      * Create index metadata
      */
-    const createdIndexMetadataCollection = await indexMetadataRepository.save(
-      storage.indexMetadataCreateCollection.map(convertIndexMetadataForSaving),
-    );
+    const createdIndexMetadataCollection =
+      await indexMetadataRepository.save(test);
 
     /**
      * Delete index metadata

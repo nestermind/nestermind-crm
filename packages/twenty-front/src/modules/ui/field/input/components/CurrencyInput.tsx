@@ -18,8 +18,9 @@ export const StyledIMaskInput = styled(IMaskInput)<StyledInputProps>`
   padding: ${({ theme }) => `${theme.spacing(0)} ${theme.spacing(1.5)}`};
 `;
 
-const StyledContainer = styled.div`
+const StyledContainer = styled.div<{ maxWidth?: number }>`
   align-items: center;
+  max-width: ${({ maxWidth }) => (maxWidth ? `${maxWidth}px` : '100%')};
 
   display: flex;
   justify-content: center;
@@ -50,6 +51,8 @@ export type CurrencyInputProps = {
   onChange?: (newText: string) => void;
   onSelect?: (newText: string) => void;
   hotkeyScope: string;
+  maxWidth?: number;
+  dropdownId?: string;
 };
 
 type Currency = {
@@ -71,6 +74,8 @@ export const CurrencyInput = ({
   onChange,
   onSelect,
   hotkeyScope,
+  maxWidth,
+  dropdownId = 'currency-picker-dropdown-id',
 }: CurrencyInputProps) => {
   const theme = useTheme();
 
@@ -119,17 +124,14 @@ export const CurrencyInput = ({
   const Icon: IconComponent = currency?.Icon;
 
   return (
-    <StyledContainer ref={wrapperRef}>
+    <StyledContainer ref={wrapperRef} maxWidth={maxWidth}>
       <CurrencyPickerDropdownButton
         valueCode={currency?.value ?? ''}
         onChange={handleCurrencyChange}
         currencies={currencies}
+        dropdownId={dropdownId}
       />
-      <StyledIcon>
-        {Icon && (
-          <Icon size={theme.icon.size.md} stroke={theme.icon.stroke.sm} />
-        )}
-      </StyledIcon>
+
       <StyledIMaskInput
         mask={Number}
         thousandsSeparator={','}

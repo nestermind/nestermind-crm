@@ -15,13 +15,15 @@ const StyledContainer = styled.div`
   width: 100%;
 `;
 
-const StyledChildrenContainer = styled.div`
+const StyledChildrenContainer = styled.div<{ wrap?: boolean }>`
   display: flex;
   gap: ${({ theme }) => theme.spacing(1)};
   overflow: hidden;
   max-width: 100%;
   flex: 0 1 fit-content;
   position: relative; // Needed so children elements compute their offsetLeft relatively to this element.
+
+  flex-wrap: ${({ wrap }) => (wrap ? 'wrap' : 'unset')};
 `;
 
 const StyledChildContainer = styled.div`
@@ -41,6 +43,7 @@ const StyledChipCount = styled(Chip)`
 export type ExpandableListProps = {
   isChipCountDisplayed?: boolean;
   withExpandedListBorder?: boolean;
+  wrap?: boolean;
 };
 
 export type ChildrenProperty = {
@@ -52,6 +55,7 @@ export const ExpandableList = ({
   children,
   isChipCountDisplayed: isChipCountDisplayedFromProps,
   withExpandedListBorder = false,
+  wrap,
 }: {
   children: ReactElement[];
 } & ExpandableListProps) => {
@@ -127,7 +131,7 @@ export const ExpandableList = ({
           : () => setIsChipCountDisplayedInternal(false)
       }
     >
-      <StyledChildrenContainer ref={setChildrenContainerElement}>
+      <StyledChildrenContainer ref={setChildrenContainerElement} wrap={wrap}>
         {children.slice(0, firstHiddenChildIndex).map((child, index) => (
           <StyledChildContainer
             key={index}

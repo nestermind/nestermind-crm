@@ -12,7 +12,7 @@ import { isFieldText } from '../../types/guards/isFieldText';
 import { isFieldTextValue } from '../../types/guards/isFieldTextValue';
 
 export const useTextField = () => {
-  const { recordId, fieldDefinition, hotkeyScope, maxWidth } =
+  const { recordId, fieldDefinition, hotkeyScope, maxWidth, formType } =
     useContext(FieldContext);
 
   assertFieldMetadata(FieldMetadataType.TEXT, isFieldText, fieldDefinition);
@@ -40,5 +40,6 @@ export const useTextField = () => {
     fieldValue: fieldTextValue,
     setFieldValue,
     hotkeyScope,
+    formType,
   };
 };

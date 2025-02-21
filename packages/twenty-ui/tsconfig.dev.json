@@ -15,5 +15,5 @@
     "src/**/*.tsx",
     "src/**/*.ts",
     "vite.config.ts"
-]
+, "../twenty-front/src/modules/ui/navigation/navigation-drawer/components/NestermindBranding.tsx"]
 }

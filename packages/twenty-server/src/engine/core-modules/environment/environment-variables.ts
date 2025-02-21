@@ -871,6 +871,15 @@ export class EnvironmentVariables {
   PERMISSIONS_ENABLED = false;
 
   @EnvironmentVariablesMetadata({
+    group: EnvironmentVariablesGroup.ServerConfig,
+    description:
+      'If set, new Workspace creation copies metadata from defined workspace',
+  })
+  @IsString()
+  @IsOptional()
+  DEFAULT_METADATA_WORKSPACE_ID: string;
+
+  @EnvironmentVariablesMetadata({
     group: EnvironmentVariablesGroup.Other,
     description:
       'Number of inactive days before sending a deletion warning for workspaces. Used in the workspace deletion cron job to determine when to send warning emails.',

@@ -8,7 +8,11 @@ import { useRelationFromManyFieldDisplay } from '@/object-record/record-field/me
 import { ExpandableList } from '@/ui/layout/expandable-list/components/ExpandableList';
 import { isNull } from '@sniptt/guards';
 
-export const RelationFromManyFieldDisplay = () => {
+export const RelationFromManyFieldDisplay = ({
+  wrap = false,
+}: {
+  wrap?: boolean;
+}) => {
   const { fieldValue, fieldDefinition } = useRelationFromManyFieldDisplay();
   const { isFocused } = useFieldFocus();
 
@@ -75,7 +79,7 @@ export const RelationFromManyFieldDisplay = () => {
     );
   } else {
     return (
-      <ExpandableList isChipCountDisplayed={isFocused}>
+      <ExpandableList isChipCountDisplayed={isFocused} wrap={wrap}>
         {fieldValue
           .filter((record) => !isNull(record))
           .map((record) => (

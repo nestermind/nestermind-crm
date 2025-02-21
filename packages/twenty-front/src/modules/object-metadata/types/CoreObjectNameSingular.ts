@@ -20,6 +20,8 @@ export enum CoreObjectNameSingular {
   NoteTarget = 'noteTarget',
   Opportunity = 'opportunity',
   Person = 'person',
+  Property = 'property',
+  Publication = 'publication',
   Task = 'task',
   TaskTarget = 'taskTarget',
   View = 'view',

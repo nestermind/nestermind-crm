@@ -1,0 +1,1 @@
+export const LARGE_DESKTOP_VIEWPORT = 1440;

@@ -3,6 +3,7 @@ import { ObjectMetadataItem } from '@/object-metadata/types/ObjectMetadataItem';
 import { NavigationDrawerAnimatedCollapseWrapper } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerAnimatedCollapseWrapper';
 import { NavigationDrawerSection } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerSection';
 import { NavigationDrawerSectionTitle } from '@/ui/navigation/navigation-drawer/components/NavigationDrawerSectionTitle';
+import { AskNesterButton } from '@/ui/navigation/navigation-drawer/components/nm/AskNesterButton';
 import { useNavigationSection } from '@/ui/navigation/navigation-drawer/hooks/useNavigationSection';
 import { useRecoilValue } from 'recoil';
 
@@ -74,6 +75,8 @@ export const NavigationDrawerSectionForObjectMetadataItems = ({
               objectMetadataItem={objectMetadataItem}
             />
           ))}
+
+        {isNavigationSectionOpen && <AskNesterButton />}
       </NavigationDrawerSection>
     )
   );

@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 const spacing1 = THEME_COMMON.spacing(1);
 
-const StyledContainer = styled.div`
+const StyledContainer = styled.div<{ wrap?: boolean }>`
   align-items: center;
   display: flex;
   gap: ${spacing1};
@@ -17,14 +17,18 @@ const StyledContainer = styled.div`
   overflow: hidden;
 
   width: 100%;
+
+  flex-wrap: ${({ wrap }) => (wrap ? 'wrap' : 'unset')};
 `;
 
 export const MultiSelectDisplay = ({
   values,
   options,
+  wrap,
 }: {
   values: FieldMultiSelectValue | undefined;
   options: SelectOption[];
+  wrap?: boolean;
 }) => {
   const selectedOptions = values
     ? options?.filter((option) => values.includes(option.value))
@@ -33,7 +37,7 @@ export const MultiSelectDisplay = ({
   if (!selectedOptions) return null;
 
   return (
-    <StyledContainer>
+    <StyledContainer wrap={wrap}>
       {selectedOptions.map((selectedOption, index) => (
         <Tag
           preventShrink

@@ -18,7 +18,7 @@ import {
 } from 'src/modules/calendar/calendar-event-import-manager/jobs/calendar-event-list-fetch.job';
 import { CalendarChannelSyncStage } from 'src/modules/calendar/common/standard-objects/calendar-channel.workspace-entity';
 
-export const CALENDAR_EVENT_LIST_FETCH_CRON_PATTERN = '*/5 * * * *';
+export const CALENDAR_EVENT_LIST_FETCH_CRON_PATTERN = '*/1 * * * *';
 
 @Processor({
   queueName: MessageQueue.cronQueue,

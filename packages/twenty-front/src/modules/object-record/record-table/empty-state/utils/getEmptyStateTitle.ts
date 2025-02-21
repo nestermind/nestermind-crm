@@ -13,5 +13,9 @@ export const getEmptyStateTitle = (
     return t`No workflow runs yet`;
   }
 
+  if (objectNameSingular === CoreObjectNameSingular.Publication) {
+    return t`No publications yet`;
+  }
+
   return t`Add your first ${objectLabel}`;
 };

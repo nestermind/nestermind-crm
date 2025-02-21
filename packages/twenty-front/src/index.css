@@ -1,6 +1,8 @@
+@import url('https://fonts.vercel.com/css2?family=Geist:wght@400;500;600;700&display=swap');
+
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Geist', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -11,6 +13,7 @@ html {
 
 button {
   font-size: 13px;
+  font-family: 'Geist', sans-serif;
 }
 
 /* https://stackoverflow.com/questions/44543157/how-to-hide-the-google-invisible-recaptcha-badge */

@@ -6,6 +6,7 @@ import { WorkspaceSyncContext } from 'src/engine/workspace-manager/workspace-syn
 
 import { IndexMetadataEntity } from 'src/engine/metadata-modules/index-metadata/index-metadata.entity';
 import { generateDeterministicIndexName } from 'src/engine/metadata-modules/index-metadata/utils/generate-deterministic-index-name';
+import { isIndexMetadata } from 'src/engine/metadata-modules/index-metadata/utils/is-index-metadata';
 import { ObjectMetadataEntity } from 'src/engine/metadata-modules/object-metadata/object-metadata.entity';
 import { BaseWorkspaceEntity } from 'src/engine/twenty-orm/base.workspace-entity';
 import { CustomWorkspaceEntity } from 'src/engine/twenty-orm/custom.workspace-entity';
@@ -16,12 +17,14 @@ import { isGatedAndNotEnabled } from 'src/engine/workspace-manager/workspace-syn
 @Injectable()
 export class StandardIndexFactory {
   create(
-    standardObjectMetadataDefinitions: (typeof BaseWorkspaceEntity)[],
+    standardObjectMetadataDefinitions:
+      | (typeof BaseWorkspaceEntity)[]
+      | IndexMetadataEntity[],
     context: WorkspaceSyncContext,
     originalStandardObjectMetadataMap: Record<string, ObjectMetadataEntity>,
     originalCustomObjectMetadataMap: Record<string, ObjectMetadataEntity>,
     workspaceFeatureFlagsMap: FeatureFlagMap,
-  ): Partial<IndexMetadataEntity>[] {
+  ): PartialIndexMetadata[] {
     const standardIndexOnStandardObjects =
       standardObjectMetadataDefinitions.flatMap((standardObjectMetadata) =>
         this.createStandardIndexMetadataForStandardObject(
@@ -46,11 +49,37 @@ export class StandardIndexFactory {
   }
 
   private createStandardIndexMetadataForStandardObject(
-    target: typeof BaseWorkspaceEntity,
+    target: typeof BaseWorkspaceEntity | IndexMetadataEntity,
     context: WorkspaceSyncContext,
     originalStandardObjectMetadataMap: Record<string, ObjectMetadataEntity>,
     workspaceFeatureFlagsMap: FeatureFlagMap,
-  ): Partial<IndexMetadataEntity>[] {
+  ): PartialIndexMetadata[] {
+    if (isIndexMetadata(target)) {
+      const objectMetadata =
+        originalStandardObjectMetadataMap[target.objectMetadata.nameSingular];
+
+      if (!objectMetadata) {
+        throw new Error(
+          `Object metadata not found for ${target.objectMetadata.nameSingular}`,
+        );
+      }
+
+      return [
+        {
+          workspaceId: context.workspaceId,
+          objectMetadataId: objectMetadata.id,
+          name: target.name,
+          columns: target.indexFieldMetadatas.map(
+            (indexFieldMetadata) => indexFieldMetadata.fieldMetadata.name,
+          ),
+          isUnique: target.isUnique,
+          isCustom: target.isCustom,
+          indexWhereClause: target.indexWhereClause,
+          indexType: target.indexType,
+        },
+      ];
+    }
+
     const workspaceEntity = metadataArgsStorage.filterEntities(target);
 
     if (!workspaceEntity) {
@@ -103,7 +132,7 @@ export class StandardIndexFactory {
     context: WorkspaceSyncContext,
     originalCustomObjectMetadataMap: Record<string, ObjectMetadataEntity>,
     workspaceFeatureFlagsMap: FeatureFlagMap,
-  ): Partial<IndexMetadataEntity>[] {
+  ): PartialIndexMetadata[] {
     const target = CustomWorkspaceEntity;
     const workspaceEntity = metadataArgsStorage.filterExtendedEntities(target);
 

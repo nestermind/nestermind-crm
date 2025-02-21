@@ -9,6 +9,8 @@ export function generateFrontConfig(): void {
     window: {
       _env_: {
         REACT_APP_SERVER_BASE_URL: process.env.SERVER_URL,
+        REACT_APP_PUBLICATION_SERVER_BASE_URL:
+          process.env.NESTERMIND_SERVER_URL,
       },
     },
   };

@@ -48,7 +48,7 @@ import { isFieldSelect } from '../types/guards/isFieldSelect';
 import { isFieldText } from '../types/guards/isFieldText';
 import { isFieldUuid } from '../types/guards/isFieldUuid';
 
-export const FieldDisplay = () => {
+export const FieldDisplay = ({ wrap }: { wrap?: boolean }) => {
   const { fieldDefinition, isLabelIdentifier } = useContext(FieldContext);
 
   const isChipDisplay = isFieldIdentifierDisplay(
@@ -61,7 +61,7 @@ export const FieldDisplay = () => {
   ) : isFieldRelationToOneObject(fieldDefinition) ? (
     <RelationToOneFieldDisplay />
   ) : isFieldRelationFromManyObjects(fieldDefinition) ? (
-    <RelationFromManyFieldDisplay />
+    <RelationFromManyFieldDisplay wrap={wrap} />
   ) : isFieldText(fieldDefinition) ? (
     <TextFieldDisplay />
   ) : isFieldUuid(fieldDefinition) ? (
@@ -81,7 +81,7 @@ export const FieldDisplay = () => {
   ) : isFieldSelect(fieldDefinition) ? (
     <SelectFieldDisplay />
   ) : isFieldMultiSelect(fieldDefinition) ? (
-    <MultiSelectFieldDisplay />
+    <MultiSelectFieldDisplay wrap={wrap} />
   ) : isFieldAddress(fieldDefinition) ? (
     <AddressFieldDisplay />
   ) : isFieldRawJson(fieldDefinition) ? (
