@@ -43,6 +43,3 @@ dump.rdb
 /flake.nix
 
 .crowdin.yml
-
-**/**/.env.*
-!**/**/.env.*.example
